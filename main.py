@@ -18,7 +18,7 @@ eeg_speed_acceleration = 0.5
 eeg_behind_border = 100
 score = 0
 
-player_live = player_start_lives
+player_lives = player_start_lives
 eeg_current_speed = egg_speed
 
 # FPS a hodiny
@@ -47,14 +47,6 @@ score_text_rect = score_text.get_rect()
 score_text_rect.left = 20
 score_text_rect.top = 15
 
-lives_text = harry_font_middle.render(f"Live: {player_live}", True,  dark_yellow )
-lives_text_rect = lives_text.get_rect()
-lives_text_rect.right = Width - 20 
-lives_text_rect.top = 15
-
-# Tvary
-pygame.draw.line(screen, dark_yellow, (0, 60), (Width, 60), 2)
-
 # Zvuky a muzika v pozadi
 
 # Obrazky
@@ -74,6 +66,35 @@ while lets_continue:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             lets_continue = False
+            
+    # Pohyb klavesami
+    keys = pygame.key.get_pressed() 
+    if keys[pygame.K_UP] and harry_image_rect.top > 60:
+        harry_image_rect.y -= player_speed
+        
+    elif keys[pygame.K_DOWN] and harry_image_rect.bottom < height:
+        harry_image_rect.y += player_speed
+        
+    #pohib vejce
+    if egg_image_rect.x < 0:
+        player_lives -= 1 
+        egg_image_rect.x = Width + eeg_behind_border
+        egg_image_rect.y = random.randint(60, height-48)
+    else:
+        egg_image_rect.x -= egg_speed      
+        
+    #znovu vykresleni obrazovky
+    screen.fill(black)
+    
+    # Tvary
+    pygame.draw.line(screen, dark_yellow, (0, 60), (Width, 60), 2)
+    
+    # texty _zivoty
+    lives_text = harry_font_middle.render(f"Live: {player_lives}", True,  dark_yellow )
+    lives_text_rect = lives_text.get_rect()
+    lives_text_rect.right = Width - 20 
+    lives_text_rect.top = 15
+
 
     # Obrazky
     screen.blit(harry_image, harry_image_rect)
