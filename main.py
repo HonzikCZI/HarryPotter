@@ -4,7 +4,7 @@ import random
 # Inicializace hry
 pygame.init()
 
-# Obrazovka
+# Obrazovka NASTAVENI
 Width = 1000
 height = 500
 screen = pygame.display.set_mode((Width, height))
