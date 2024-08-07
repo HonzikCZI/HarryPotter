@@ -14,7 +14,7 @@ pygame.display.set_caption("Harry Potter a Ohnivý pohár")
 player_start_lives = 1
 player_speed = 5
 egg_speed = 5
-egg_speed_acceleration = 0,5
+egg_speed_acceleration = 0.5
 egg_behind_border = 100
 score = 0
 
