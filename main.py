@@ -11,15 +11,16 @@ screen = pygame.display.set_mode((Width, height))
 pygame.display.set_caption("Harry Potter a Ohnivý pohár")
 
 # Nastaveni hry
-player_start_lives = 5
+player_start_lives = 1
 player_speed = 5
 egg_speed = 5
-eeg_speed_acceleration = 0.5
-eeg_behind_border = 100
+egg_speed_acceleration = 0,5
+egg_behind_border = 100
 score = 0
 
 player_lives = player_start_lives
-eeg_current_speed = egg_speed
+egg_current_speed = egg_speed
+
 
 # FPS a hodiny
 fps = 60
@@ -42,10 +43,13 @@ game_name = harry_font_big.render("Harry Potter and goblet of fire", True, dark_
 game_name_rect = game_name.get_rect()
 game_name_rect.center = (Width//2, 30)
 
-score_text = harry_font_middle.render(f"Skore: {score}", True, dark_yellow)
-score_text_rect = score_text.get_rect()
-score_text_rect.left = 20
-score_text_rect.top = 15
+game_over_text = harry_font_big.render("Hra skoncila", True, dark_yellow)
+game_over_text_rect = game_over_text.get_rect()
+game_over_text_rect.center = (Width//2, height//2)
+
+continue_text = harry_font_middle.render("Chces hrat znovu? Stiskni libovolnou klavesu", True, dark_yellow)
+continue_text_rect = continue_text.get_rect()
+continue_text_rect.center = (Width//2, height//2 + 40)
 
 # Zvuky a muzika v pozadi
 
@@ -56,7 +60,7 @@ harry_image_rect.center = (60, height//2)
 
 egg_image = pygame.image.load("img/Egg.png")
 egg_image_rect = egg_image.get_rect()
-egg_image_rect.x = Width + eeg_behind_border
+egg_image_rect.x = Width + egg_behind_border
 egg_image_rect.y = random.randint(60, height-48)
 
 
@@ -78,10 +82,17 @@ while lets_continue:
     #pohib vejce
     if egg_image_rect.x < 0:
         player_lives -= 1 
-        egg_image_rect.x = Width + eeg_behind_border
+        egg_image_rect.x = Width + egg_behind_border
         egg_image_rect.y = random.randint(60, height-48)
     else:
-        egg_image_rect.x -= egg_speed      
+        egg_image_rect.x -= egg_speed
+        
+    # kontrola kolize
+    if harry_image_rect.colliderect(egg_image_rect):
+        score += 1
+        egg_current_speed += egg_speed_acceleration 
+        egg_image_rect.x = Width + egg_behind_border
+        egg_image_rect.y = random.randint(60, height-48)
         
     #znovu vykresleni obrazovky
     screen.fill(black)
@@ -94,16 +105,39 @@ while lets_continue:
     lives_text_rect = lives_text.get_rect()
     lives_text_rect.right = Width - 20 
     lives_text_rect.top = 15
-
+    
+    score_text = harry_font_middle.render(f"Skore: {score}", True, dark_yellow)
+    score_text_rect = score_text.get_rect()
+    score_text_rect.left = 20
+    score_text_rect.top = 15
+    
+     # Texty
+    screen.blit(game_name, game_name_rect) 
+    screen.blit(score_text, score_text_rect) 
+    screen.blit(lives_text, lives_text_rect)  
 
     # Obrazky
     screen.blit(harry_image, harry_image_rect)
-    screen.blit(egg_image, egg_image_rect)        
-
-    # Texty
-    screen.blit(game_name, game_name_rect) 
-    screen.blit(score_text, score_text_rect) 
-    screen.blit(lives_text, lives_text_rect)      
+    screen.blit(egg_image, egg_image_rect)  
+    
+    # kontrola konce hry 
+    if player_lives == 0:
+        screen.blit(game_over_text, game_over_text_rect)
+        screen.blit(continue_text, continue_text_rect)
+        pygame.display.update()
+        
+        pause = True
+        while pause:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    score = 0
+                    player_lives = player_start_lives
+                    egg_current_speed = egg_speed
+                    harry_image_rect.y = height//2
+                    pause = False
+                elif event.type == pygame.QUIT:
+                    pause = False
+                    lets_continue = False         
 
     # Update obrazovky     
     pygame.display.update()
