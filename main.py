@@ -100,24 +100,24 @@ while lets_continue:
         if pygame.joystick.get_count() != 0:
             harry_image_rect.y -= (player_current_speed/5) * (abs(y_axis)*10)
         else:
-            harry_image_rect.y -= player_current_speed
+            harry_image_rect.y -= player_current_speed/5*10
         
     elif (keys[pygame.K_DOWN] or y_axis > 0.1) and harry_image_rect.bottom < height:
         if pygame.joystick.get_count() != 0:
             harry_image_rect.y += (player_current_speed/5) * (abs(y_axis)*10)
         else:
-            harry_image_rect.y += player_current_speed
+            harry_image_rect.y += player_current_speed/5*10
             
     if (keys[pygame.K_LEFT] or x_axis < -0.1) and harry_image_rect.left > 0:
         if pygame.joystick.get_count() != 0:
             harry_image_rect.x -= (player_current_speed/5) * (abs(x_axis)*10)
         else:
-            harry_image_rect.x -= player_current_speed   
+            harry_image_rect.x -= player_current_speed/5*10
     elif (keys[pygame.K_RIGHT] or x_axis > 0.1) and harry_image_rect.right < Width:
         if pygame.joystick.get_count() != 0:
             harry_image_rect.x += (player_current_speed/5) * (abs(x_axis)*10)
         else:
-            harry_image_rect.x += player_current_speed
+            harry_image_rect.x += player_current_speed/5*10
 
     #pohyb vejce
     if egg_image_rect.x < 0:
