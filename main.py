@@ -55,11 +55,14 @@ continue_text_rect.center = (Width//2, height//2 + 40)
 
 # Zvuky a muzika v pozadi
 pygame.mixer.music.load("sound/harrypotter.sound.mp3")
+pygame.mixer.music.set_volume(0.2)
 pygame.mixer.music.play(-1, 0.0)
 loose_life_sound = pygame.mixer.Sound("sound/vedlesound.mp3")
-loose_life_sound.set_volume(1.0)
+loose_life_sound.set_volume(0.5)
 take_egg_sound = pygame.mixer.Sound("sound/item-pick-up.mp3")
-take_egg_sound.set_volume(0.8)
+take_egg_sound.set_volume(0.5)
+haha_sound = pygame.mixer.Sound("sound/evil-laugh.mp3")
+haha_sound.set_volume(1.0)
 
 # Obrazky
 harry_image = pygame.image.load("img/PumpkinPotter.png")
@@ -137,6 +140,9 @@ while lets_continue:
         egg_image_rect.y = random.randint(60, height-48)
         take_egg_sound.play()
         
+        if score % 50 == 0:
+            haha_sound.play()
+        
     #znovu vykresleni obrazovky
     screen.fill(black)
     
@@ -173,7 +179,7 @@ while lets_continue:
         pause = True
         while pause:
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
+                if (event.type == pygame.KEYDOWN) or (event.type == pygame.JOYBUTTONDOWN):
                     score = 0
                     player_lives = player_start_lives
                     egg_current_speed = egg_speed
