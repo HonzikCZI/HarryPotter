@@ -19,8 +19,8 @@ egg_behind_border = 100
 score = 0
 
 player_lives = player_start_lives
+player_current_speed = player_speed
 egg_current_speed = egg_speed
-
 
 # FPS a hodiny
 fps = 60
@@ -80,12 +80,12 @@ while lets_continue:
     # Pohyb klavesami
     keys = pygame.key.get_pressed() 
     if keys[pygame.K_UP] and harry_image_rect.top > 60:
-        harry_image_rect.y -= player_speed
+        harry_image_rect.y -= player_current_speed
         
     elif keys[pygame.K_DOWN] and harry_image_rect.bottom < height:
-        harry_image_rect.y += player_speed
+        harry_image_rect.y += player_current_speed
         
-    #pohib vejce
+    #pohyb vejce
     if egg_image_rect.x < 0:
         player_lives -= 1 
         egg_image_rect.x = Width + egg_behind_border
@@ -97,7 +97,8 @@ while lets_continue:
     # kontrola kolize
     if harry_image_rect.colliderect(egg_image_rect):
         score += 1
-        egg_current_speed += egg_speed_acceleration 
+        egg_current_speed += egg_speed_acceleration
+        player_current_speed += egg_speed_acceleration
         egg_image_rect.x = Width + egg_behind_border
         egg_image_rect.y = random.randint(60, height-48)
         take_egg_sound.play()
@@ -143,6 +144,7 @@ while lets_continue:
                     player_lives = player_start_lives
                     egg_current_speed = egg_speed
                     harry_image_rect.y = height//2
+                    player_current_speed = player_speed 
                     pause = False
                     pygame.mixer.music.play(-1, 0.0)
                 elif event.type == pygame.QUIT:
