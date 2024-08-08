@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((Width, height))
 pygame.display.set_caption("Harry Potter a Ohnivý pohár")
 
 # Nastaveni hry
-player_start_lives = 1
+player_start_lives = 5
 player_speed = 5
 egg_speed = 5
 egg_speed_acceleration = 0.5
@@ -52,6 +52,12 @@ continue_text_rect = continue_text.get_rect()
 continue_text_rect.center = (Width//2, height//2 + 40)
 
 # Zvuky a muzika v pozadi
+pygame.mixer.music.load("sound/harrypotter.sound.mp3")
+pygame.mixer.music.play(-1, 0.0)
+loose_life_sound = pygame.mixer.Sound("sound/vedlesound.mp3")
+loose_life_sound.set_volume(1.0)
+take_egg_sound = pygame.mixer.Sound("sound/item-pick-up.mp3")
+take_egg_sound.set_volume(0.8)
 
 # Obrazky
 harry_image = pygame.image.load("img/PumpkinPotter.png")
@@ -84,8 +90,9 @@ while lets_continue:
         player_lives -= 1 
         egg_image_rect.x = Width + egg_behind_border
         egg_image_rect.y = random.randint(60, height-48)
+        loose_life_sound.play()
     else:
-        egg_image_rect.x -= egg_speed
+        egg_image_rect.x -= egg_current_speed
         
     # kontrola kolize
     if harry_image_rect.colliderect(egg_image_rect):
@@ -93,6 +100,7 @@ while lets_continue:
         egg_current_speed += egg_speed_acceleration 
         egg_image_rect.x = Width + egg_behind_border
         egg_image_rect.y = random.randint(60, height-48)
+        take_egg_sound.play()
         
     #znovu vykresleni obrazovky
     screen.fill(black)
@@ -125,6 +133,7 @@ while lets_continue:
         screen.blit(game_over_text, game_over_text_rect)
         screen.blit(continue_text, continue_text_rect)
         pygame.display.update()
+        pygame.mixer.music.stop()
         
         pause = True
         while pause:
@@ -135,6 +144,7 @@ while lets_continue:
                     egg_current_speed = egg_speed
                     harry_image_rect.y = height//2
                     pause = False
+                    pygame.mixer.music.play(-1, 0.0)
                 elif event.type == pygame.QUIT:
                     pause = False
                     lets_continue = False         
