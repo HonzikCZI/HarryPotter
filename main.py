@@ -14,9 +14,11 @@ pygame.display.set_caption("Harry Potter a Ohnivý pohár")
 player_start_lives = 5
 player_speed = 5
 egg_speed = 5
-egg_speed_acceleration = 0.5
+egg_speed_acceleration = 0.1
 egg_behind_border = 100
 score = 0
+x_axis = 0.0
+y_axis = 0.0
 
 player_lives = player_start_lives
 player_current_speed = player_speed
@@ -70,21 +72,53 @@ egg_image_rect.x = Width + egg_behind_border
 egg_image_rect.y = random.randint(60, height-48)
 
 
-# Hlavni ciklus
+# inicializace joystiku
+pygame.joystick.init()
+
+# kontrola ze je pripojen
+if pygame.joystick.get_count() == 0:
+    print("Zadny joystick nenalezen.")
+else:
+    joystick = pygame.joystick.Joystick(0)
+    joystick.init()
+
+# Hlavni cyklus
 lets_continue = True
 while lets_continue:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             lets_continue = False
+    
+    # pohyb joystiku
+    if pygame.joystick.get_count() != 0:
+        x_axis = joystick.get_axis(0)
+        y_axis = joystick.get_axis(1)
             
     # Pohyb klavesami
     keys = pygame.key.get_pressed() 
-    if keys[pygame.K_UP] and harry_image_rect.top > 60:
-        harry_image_rect.y -= player_current_speed
+    if (keys[pygame.K_UP] or y_axis < -0.1) and harry_image_rect.top > 60:
+        if pygame.joystick.get_count() != 0:
+            harry_image_rect.y -= (player_current_speed/5) * (abs(y_axis)*10)
+        else:
+            harry_image_rect.y -= player_current_speed
         
-    elif keys[pygame.K_DOWN] and harry_image_rect.bottom < height:
-        harry_image_rect.y += player_current_speed
-        
+    elif (keys[pygame.K_DOWN] or y_axis > 0.1) and harry_image_rect.bottom < height:
+        if pygame.joystick.get_count() != 0:
+            harry_image_rect.y += (player_current_speed/5) * (abs(y_axis)*10)
+        else:
+            harry_image_rect.y += player_current_speed
+            
+    if (keys[pygame.K_LEFT] or x_axis < -0.1) and harry_image_rect.left > 0:
+        if pygame.joystick.get_count() != 0:
+            harry_image_rect.x -= (player_current_speed/5) * (abs(x_axis)*10)
+        else:
+            harry_image_rect.x -= player_current_speed   
+    elif (keys[pygame.K_RIGHT] or x_axis > 0.1) and harry_image_rect.right < Width:
+        if pygame.joystick.get_count() != 0:
+            harry_image_rect.x += (player_current_speed/5) * (abs(x_axis)*10)
+        else:
+            harry_image_rect.x += player_current_speed
+
     #pohyb vejce
     if egg_image_rect.x < 0:
         player_lives -= 1 
