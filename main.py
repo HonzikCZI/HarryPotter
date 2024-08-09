@@ -16,7 +16,7 @@ player_speed = 5
 egg_speed = 5
 egg_speed_acceleration = 0.1
 egg_behind_border = 100
-score = 199
+score = 0
 x_axis = 0.0
 y_axis = 0.0
 
