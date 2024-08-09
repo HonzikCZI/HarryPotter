@@ -9,6 +9,7 @@ Width = 1366
 height = 768
 screen = pygame.display.set_mode((Width, height), pygame.FULLSCREEN)
 pygame.display.set_caption("Harry Potter a Ohnivý pohár")
+pygame.mouse.set_visible(False)
 
 # Nastaveni hry
 player_start_lives = 5
