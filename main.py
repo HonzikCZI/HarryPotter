@@ -5,9 +5,9 @@ import random
 pygame.init()
 
 # Obrazovka NASTAVENI
-Width = 1000
-height = 500
-screen = pygame.display.set_mode((Width, height))
+Width = 1366
+height = 768
+screen = pygame.display.set_mode((Width, height), pygame.FULLSCREEN)
 pygame.display.set_caption("Harry Potter a Ohnivý pohár")
 
 # Nastaveni hry
@@ -133,6 +133,9 @@ while lets_continue:
             harry_image_rect.x += (player_current_speed/5) * (abs(x_axis)*10)
         else:
             harry_image_rect.x += player_current_speed/5*10
+    
+    if (keys[pygame.K_ESCAPE] or keys[pygame.K_q]):
+        lets_continue = False
                  
 
     #pohyb vejce
