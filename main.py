@@ -16,7 +16,7 @@ player_speed = 5
 egg_speed = 5
 egg_speed_acceleration = 0.1
 egg_behind_border = 100
-score = 0
+score = 199
 x_axis = 0.0
 y_axis = 0.0
 
@@ -53,6 +53,14 @@ continue_text = harry_font_middle.render("Chces hrat znovu? Stiskni libovolnou k
 continue_text_rect = continue_text.get_rect()
 continue_text_rect.center = (Width//2, height//2 + 40)
 
+continue_text1 = harry_font_middle.render("Chces hrat znovu? Stiskni libovolnou klavesu", True, dark_yellow)
+continue_text_rect1 = continue_text1.get_rect()
+continue_text_rect1.center = (Width//2, height//2 + 50)
+
+win_text = harry_font_big.render("Vyhral si!!!", True, dark_yellow)
+win_text_rect = win_text.get_rect()
+win_text_rect.center = (Width//2, height//2 + 15)
+
 # Zvuky a muzika v pozadi
 pygame.mixer.music.load("sound/harrypotter.sound.mp3")
 pygame.mixer.music.set_volume(0.2)
@@ -73,6 +81,10 @@ egg_image = pygame.image.load("img/Egg.png")
 egg_image_rect = egg_image.get_rect()
 egg_image_rect.x = Width + egg_behind_border
 egg_image_rect.y = random.randint(60, height-48)
+
+pohar_image = pygame.image.load("img/cup.png")
+pohar_image_rect = pohar_image.get_rect()
+pohar_image_rect.center = (Width//2, height//2 - 60)
 
 
 # inicializace joystiku
@@ -121,6 +133,7 @@ while lets_continue:
             harry_image_rect.x += (player_current_speed/5) * (abs(x_axis)*10)
         else:
             harry_image_rect.x += player_current_speed/5*10
+                 
 
     #pohyb vejce
     if egg_image_rect.x < 0:
@@ -167,7 +180,31 @@ while lets_continue:
 
     # Obrazky
     screen.blit(harry_image, harry_image_rect)
-    screen.blit(egg_image, egg_image_rect)  
+    screen.blit(egg_image, egg_image_rect) 
+    
+     #ziskani poharu
+    if score == 200:
+        screen.blit(pohar_image, pohar_image_rect) 
+        screen.blit(continue_text1, continue_text_rect1)
+        screen.blit(win_text, win_text_rect)
+        pygame.mixer.music.stop()
+        pygame.display.update()
+        
+        pause1 = True
+        while pause1:
+            for event in pygame.event.get():
+                if (event.type == pygame.KEYDOWN) or (event.type == pygame.JOYBUTTONDOWN):
+                    score = 0
+                    player_lives = player_start_lives
+                    egg_current_speed = egg_speed
+                    harry_image_rect.y = height//2
+                    player_current_speed = player_speed 
+                    pause1 = False
+                    pygame.mixer.music.play(-1, 0.0)
+                elif event.type == pygame.QUIT:
+                    pause1 = False
+                    lets_continue = False         
+  
     
     # kontrola konce hry 
     if player_lives == 0:
